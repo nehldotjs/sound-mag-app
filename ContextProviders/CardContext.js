@@ -1,6 +1,16 @@
 import { View, Text } from "react-native";
 import React, { createContext, useContext } from "react";
+
 const CardContextProvider = createContext();
+
+function UseCard() {
+  const context = useContext(CardContextProvider);
+  if (!context) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
+}
+
 const CardContext = ({ children }) => {
   return (
     <>
@@ -13,6 +23,7 @@ const CardContext = ({ children }) => {
 
 const CardValues = () => {
   const value = { name: "pixu" };
+  return value;
 };
 
-export { CardContext };
+export { CardContext, UseCard };

@@ -1,8 +1,10 @@
 import { View, Text } from "react-native";
-import React, { useLayoutEffect } from "react";
+import React, { useLayoutEffect, useContext } from "react";
 import { useNavigation } from "@react-navigation/native";
+import { UseCard } from "../../ContextProviders/CardContext";
 
 const HomeScreen = () => {
+  const { name } = UseCard();
   const navigation = useNavigation();
 
   useLayoutEffect(() => {
@@ -13,7 +15,7 @@ const HomeScreen = () => {
 
   return (
     <View>
-      <Text>west side!!!!!!!!!!!</Text>
+      <Text>west side!!!!!!!!!!! {name}</Text>
     </View>
   );
 };
