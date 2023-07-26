@@ -15,7 +15,7 @@ const HomeScreen = () => {
 
   return (
     <View>
-      <Text>west side!!! {" " + name}</Text>
+      <Text>west side!!! {"hello" + " " + name}</Text>
     </View>
   );
 };

@@ -22,7 +22,6 @@ const OnboardingScreen = () => {
           backgroundColor: "orangered"
         }}>
         <Text style={{ backgroundColor: "skyblue" }}>OnboardingScreen</Text>
-
         <Text style={{ backgroundColor: "skyblue" }}>
           OnboardingScreen pixu way
         </Text>

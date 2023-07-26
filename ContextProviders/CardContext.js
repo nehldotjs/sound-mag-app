@@ -22,8 +22,8 @@ const CardContext = ({ children }) => {
 };
 
 const CardValues = () => {
-  const value = { name: "pixu" };
-  return value;
+  const x = { name: "pixu" };
+  return x;
 };
 
 export { CardContext, UseCard };
