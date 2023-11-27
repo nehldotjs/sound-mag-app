@@ -3,14 +3,6 @@ import React, { createContext, useContext } from "react";
 
 const CardContextProvider = createContext();
 
-function UseCard() {
-  const context = useContext(CardContextProvider);
-  if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
-  return context;
-}
-
 const CardContext = ({ children }) => {
   return (
     <>
@@ -20,6 +12,14 @@ const CardContext = ({ children }) => {
     </>
   );
 };
+
+function UseCard() {
+  const context = useContext(CardContextProvider);
+  if (!context) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
+}
 
 const CardValues = () => {
   const x = { name: "pixu" };

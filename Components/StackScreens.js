@@ -4,8 +4,10 @@ import { createStackNavigator } from "@react-navigation/stack";
 
 // SCREENS IMPORT
 
-import OnboardingScreen from "./Screens/OnboardingScreen";
-import HomeScreen from "./Screens/HomeScreen";
+import LoginScreen from "./screens/LoginScreen";
+import HomeScreen from "./screens/HomeScreen";
+import RegistrationScreen from "./screens/RegistrationScreen"
+
 
 // SCREENS IMPORT
 
@@ -15,8 +17,9 @@ const StackScreens = () => {
   return (
     <>
       <Stack.Navigator>
-        <Stack.Screen name="OnBoard" component={OnboardingScreen} />
-        <Stack.Screen name="Home" component={HomeScreen} />
+        {/* <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Screen name="Home" component={HomeScreen} />  */}
+        <Stack.Screen name="Create-account" component={RegistrationScreen} /> 
       </Stack.Navigator>
     </>
   );
