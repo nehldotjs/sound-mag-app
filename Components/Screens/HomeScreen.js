@@ -25,15 +25,20 @@ const HomeScreen = () => {
       headerShown: false
     });
   }, [navigation]);
+
   return (
     <View>
-      <Text>HomeScreen : {auth.currentUser?.email}</Text>
-
-      <TouchableOpacity onPress={handleSignOut}>Sign Out</TouchableOpacity>
+      <Text>Hello world </Text>
     </View>
   );
 };
 
 export default HomeScreen;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  text: {
+    fontWeight: "bold",
+    fontSize: 40,
+    color: "blue"
+  }
+});

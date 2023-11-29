@@ -1,56 +1,50 @@
-// RegistrationScreen.js
-import React, { useState } from "react";
-import { View, StyleSheet, Image, TouchableOpacity } from "react-native";
-import { Input, Button, Text } from "react-native-elements";
+import React, { useLayoutEffect, useEffect, useState } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  TouchableOpacity,
+  Image
+} from "react-native";
+import { Input, Button } from "react-native-elements";
 import ImagePicker from "react-native-image-picker";
+import { useNavigation } from "@react-navigation/native";
+
+import {
+  createUserWithEmailAndPassword,
+  onAuthStateChanged
+} from "firebase/auth";
+import { FIREBASE_AUTH } from "../../firebase";
 
 const RegistrationScreen = () => {
   const [userInfo, setUserInfo] = useState({
     username: "",
     email: "",
-    password: "",
-    profileImage: null
+    password: ""
   });
+  const navigation = useNavigation();
+  const auth = FIREBASE_AUTH;
 
-  const handleImageUpload = () => {
-    const options = {
-      title: "Select Profile Image",
-      storageOptions: {
-        skipBackup: true,
-        path: "images"
-      }
-    };
-
-    ImagePicker.showImagePicker(options, (response) => {
-      if (response.didCancel || response.error || response.customButton) {
-        console.log(
-          "Image picker error:",
-          response.error || response.customButton
-        );
-      } else {
-        setUserInfo({ ...userInfo, profileImage: response.uri });
-      }
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerShown: false
     });
-  };
+  }, [navigation]);
 
   const handleRegistration = () => {
-    // Implement your registration logic here
+    const { email, password, username } = userInfo; // Destructure userInfo
+    createUserWithEmailAndPassword(auth, email, password, username)
+      .then((userCredentials) => {
+        const user = userCredentials.user;
+        console.log(user);
+      })
+      .catch((err) => alert(err.message));
     console.log("User Info:", userInfo);
   };
 
   return (
     <View style={styles.container}>
-      {userInfo.profileImage ? (
-        <Image
-          source={{ uri: userInfo.profileImage }}
-          style={styles.profileImage}
-        />
-      ) : (
-        <TouchableOpacity onPress={handleImageUpload}>
-          <Text style={styles.uploadText}>Select Profile Image</Text>
-        </TouchableOpacity>
-      )}
-
       <Input
         placeholder="Username"
         onChangeText={(text) => setUserInfo({ ...userInfo, username: text })}

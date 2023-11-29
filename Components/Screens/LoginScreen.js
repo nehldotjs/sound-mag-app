@@ -34,7 +34,7 @@ const LoginScreen = () => {
     return () => {
       console.log("Cleaning up auth state change listener");
       unsubscribe();
-    }; 
+    };
   }, []);
 
   const handleSignUp = () => {
