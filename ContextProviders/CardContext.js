@@ -12,6 +12,7 @@ const CardContext = ({ children }) => {
     </>
   );
 };
+console.log("wasssssuuuuuuuuuuuuuuuupppppppppppp")
 
 function UseCard() {
   const context = useContext(CardContextProvider);

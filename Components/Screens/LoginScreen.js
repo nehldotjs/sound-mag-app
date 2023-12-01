@@ -64,7 +64,6 @@ const LoginScreen = () => {
   return (
     <View style={styles.container}>
       <Text>Login Screen</Text>
-
       <View style={styles.formContainer}>
         <TextInput
           style={styles.textInput}
