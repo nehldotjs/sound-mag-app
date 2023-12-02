@@ -1,8 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
-
-// TODO: Replace the following with your app's Firebase project configuration
-// See: https://firebase.google.com/docs/web/learn-more#config-object
+import { getAuth, GoogleAuthProvider } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCqb0FSv5cd1Hs6a5gUVJUwJvYvczrqHEM",
@@ -13,7 +10,6 @@ const firebaseConfig = {
   appId: "1:444690090076:web:b0d27babd8b22e9b76fe99"
 };
 
-// Initialize Firebase
+export const GOOGLE_PROVIDER = new GoogleAuthProvider();
 export const FIREBASE_APP = initializeApp(firebaseConfig);
-// Initialize Firebase Authentication and get a reference to the service
 export const FIREBASE_AUTH = getAuth(FIREBASE_APP);

@@ -12,7 +12,11 @@ const CardContext = ({ children }) => {
     </>
   );
 };
-console.log("wasssssuuuuuuuuuuuuuuuupppppppppppp")
+
+const CardValues = () => {
+  const x = { name: "pixu" };
+  return x;
+};
 
 function UseCard() {
   const context = useContext(CardContextProvider);
@@ -22,9 +26,5 @@ function UseCard() {
   return context;
 }
 
-const CardValues = () => {
-  const x = { name: "pixu" };
-  return x;
-};
 
 export { CardContext, UseCard };

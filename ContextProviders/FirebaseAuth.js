@@ -1,31 +1,51 @@
+import React, { useContext, useState, useEffect, createContext } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import React, { useContext, useState, createContext } from "react";
+import { FIREBASE_AUTH } from "../firebase";
 
-const firebaseContext = createContext();
+const firebaseContextProvider = createContext();
+const fireAuth = () => {
+  const [onAuthState, setAuthState] = useState(true);
+  const auth = FIREBASE_AUTH;
+  console.log(auth);
+  useEffect(() => {
+    console.log("useEffect - Setting up auth state change listener");
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      console.log("onAuthStateChanged - User changed:", user);
+      if (user) {
+        setAuthState(true);
+        console.log("USER LOGGED IN :", onAuthState);
+      }
+    });
 
-const FirebaseAuth = () => {
-  return ( 
-    <>
-      <firebaseContext.Provider value={fireAuth}>
-        {props.children}
-      </firebaseContext.Provider>
-    </>
+    return () => {
+      console.log("Cleaning up auth state change listener");
+      unsubscribe();
+    };
+  }, []);
+
+  const result = {
+    text: "firebase auth provider",
+    onAuthState
+  };
+  return result;
+};
+
+const FirebaseAuth = ({ children }) => {
+  return (
+    <firebaseContextProvider.Provider value={fireAuth()}>
+      {children}
+    </firebaseContextProvider.Provider>
   );
 };
 
 function useFirebaseContext() {
-  const baseContext = useContext(firebaseContext);
-  if (!firebaseContext) {
-    throw new Error("useAuth must be used within an AuthProvider");
+  const baseContext = useContext(firebaseContextProvider);
+  if (!baseContext) {
+    throw new Error(
+      "useFirebaseContext must be used within a FirebaseAuthProvider"
+    );
   }
   return baseContext;
 }
 
-const fireAuth = () => {
-  const result = { text: "fire base auth provider", numb: 3 };
-  return result;
-};
-
-export { FirebaseAuth, fireAuth };
-
-const styles = StyleSheet.create({});
+export { FirebaseAuth, useFirebaseContext };
