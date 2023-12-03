@@ -22,17 +22,15 @@ const Stack = createStackNavigator();
 const StackScreens = () => {
   const { onAuthState, setAuthState } = useFirebaseContext();
   const [loading, setLoading] = useState(true);
-
   const auth = FIREBASE_AUTH;
-
   useEffect(() => {
-    console.log("useEffect - Setting up auth state change listener");
     const unsubscribe = auth.onAuthStateChanged((user) => {
-      setLoading(false); // Set loading to false once the authentication state is determined
-      if (user) {
-        setAuthState(true);
-      } else {
-        setAuthState(false);
+      try {
+        if (user) {
+          setAuthState(true);
+        }
+      } catch (err) {
+        console.error(err);
       }
     });
 
@@ -41,15 +39,6 @@ const StackScreens = () => {
       unsubscribe();
     };
   }, []);
-
-  if (loading) {
-    // You might want to show a loading indicator or splash screen here
-    return (
-      <View>
-        <Text>Loading...</Text>
-      </View>
-    );
-  }
 
   return (
     <Stack.Navigator>
