@@ -1,34 +1,77 @@
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
   View,
-  TextInput,
-  TouchableOpacity
+  TouchableOpacity,
+  Dimensions
 } from "react-native";
-import React, { useLayoutEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { UseCard } from "../../ContextProviders/CardContext";
-import { FIREBASE_AUTH } from "../../firebase";
+
+// FIREBASE IMPORTS
+import { FIREBASE_AUTH, db } from "../../firebase";
+import { getDocs, collection } from "firebase/firestore";
+
+// FIREBASE IMPORTS
+
+// CONTEXTS IMPORTS
+import { useFirebaseContext } from "../../ContextProviders/FirebaseAuth";
+// CONTEXTS IMPORTS
 
 const HomeScreen = () => {
+  const [userInfo, setUserInfo] = [];
+  const { onAuthState, setAuthState } = useFirebaseContext();
   const navigation = useNavigation();
   const auth = FIREBASE_AUTH;
-
-  const handleSignOut = () => {
+  const screenWidth = Dimensions.get("window").width; // Move screenWidth here
+  const userInfoRef = collection(db, "userInfo");
+  const handleSignOut = async () => {
     auth.signOut().then(() => {
-      navigation.navigate("Login");
+      try {
+        if (onAuthState) {
+          setAuthState(false);
+        }
+      } catch (err) {
+        return err;
+      }
     });
   };
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     navigation.setOptions({
       headerShown: false
     });
-  }, [navigation]);
+
+    const getUserInfo = async () => {
+      try {
+        const data = await getDocs(userInfoRef);
+        const filteredData = data.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id
+        }));
+        console.log(filteredData);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getUserInfo();
+  }, []);
 
   return (
-    <View>
-      <Text>Hello world </Text>
+    <View
+      style={[
+        {
+          flex: 1,
+          backgroundColor: "pink",
+          justifyContent: "center",
+          alignItems: "center"
+        },
+        { width: screenWidth }
+      ]}>
+      <Text>Hello World {auth?.currentUser?.email}</Text>
+      <TouchableOpacity style={styles.button} onPress={handleSignOut}>
+        <Text>Sign Out</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -36,6 +79,14 @@ const HomeScreen = () => {
 export default HomeScreen;
 
 const styles = StyleSheet.create({
+  button: {
+    width: 100,
+    backgroundColor: "orangered",
+    marginTop: 50,
+    padding: 20,
+    justifyContent: "center",
+    alignItems: "center"
+  },
   text: {
     fontWeight: "bold",
     fontSize: 40,

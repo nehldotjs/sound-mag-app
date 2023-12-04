@@ -15,27 +15,15 @@ import {
   onAuthStateChanged
 } from "firebase/auth";
 
+import { useFirebaseContext } from "../../ContextProviders/FirebaseAuth";
+
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { name } = UseCard();
+  const { onAuthState, setAuthState } = useFirebaseContext();
 
   const auth = FIREBASE_AUTH;
   const navigation = useNavigation();
-
-  useEffect(() => {
-    console.log("useEffect - Setting up auth state change listener");
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      console.log("onAuthStateChanged - User changed:", user);
-      if (user) {
-        navigation.navigate("Home");
-      }
-    });
-    return () => {
-      console.log("Cleaning up auth state change listener");
-      unsubscribe();
-    };
-  }, []);
 
   const handleSignUp = () => {
     createUserWithEmailAndPassword(auth, email, password)
@@ -50,15 +38,16 @@ const LoginScreen = () => {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredentials) => {
         const user = userCredentials.user;
-        console.log(user);
+        setAuthState(user.uid);
       })
       .catch((err) => alert(err.message));
   };
 
-  useLayoutEffect(() => {
-    navigation.setOptions({
+  useEffect(() => {
+    const opt = navigation.setOptions({
       headerShown: false
     });
+    return opt;
   }, [navigation]);
 
   return (
@@ -74,6 +63,7 @@ const LoginScreen = () => {
         <TextInput
           style={styles.textInput}
           placeholder="Password"
+          type="password"
           value={password}
           secureTextEntry
           onChangeText={(text) => setPassword(text)}
