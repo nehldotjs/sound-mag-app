@@ -46,7 +46,7 @@ const StackScreens = () => {
         <Stack.Screen name="Home" component={HomeScreen} />
       ) : (
         <>
-          <Stack.Screen name="Login" component={LoginScreen} />
+          <Stack.Screen name="Lo gin" component={LoginScreen} />
           <Stack.Screen name="Create-account" component={RegistrationScreen} />
         </>
       )}

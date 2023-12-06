@@ -1,13 +1,16 @@
 import React, { useContext, createContext, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
-
+import { FIREBASE_AUTH } from "../firebase";
 const firebaseContextProvider = createContext();
 const fireAuth = () => {
   const [onAuthState, setAuthState] = useState(false); // Change initial state to null
+  const auth = FIREBASE_AUTH;
+  const userId = auth?.currentUser?.uid;
   const result = {
     text: "firebase auth provider",
     onAuthState,
-    setAuthState
+    setAuthState,
+    userId
   };
   return result;
 };
