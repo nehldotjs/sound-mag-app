@@ -7,7 +7,7 @@ const fireAuth = () => {
   const auth = FIREBASE_AUTH;
   const userId = auth?.currentUser?.uid;
   const result = {
-    text: "firebase auth provider",
+    text: "firebase auth provider is ready ",
     onAuthState,
     setAuthState,
     userId
