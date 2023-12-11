@@ -20,14 +20,14 @@ const FirebaseAuth = ({ children }) => {
     <firebaseContextProvider.Provider value={fireAuth()}>
       {children}
     </firebaseContextProvider.Provider>
-  );
+  ); 
 };
 
 function useFirebaseContext() {
   const baseContext = useContext(firebaseContextProvider);
   if (!baseContext) {
     throw new Error(
-      "useFirebaseContext must be used within a FirebaseAuthProvider"
+      "useFirebaseContext must be used within a FirebaseAuthProvider...."
     );
   }
   return baseContext;
