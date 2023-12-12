@@ -1,21 +1,14 @@
-import { View, Text } from "react-native";
 import React, { useEffect, useState } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-
-// FIREBASE IMPORTS
 import { FIREBASE_AUTH } from "../firebase";
 import { onAuthStateChanged } from "firebase/auth";
-// FIREBASE IMPORTS
-
-// CONTEXT IMPORTS
 import { useFirebaseContext } from "../ContextProviders/FirebaseAuth";
-// CONTEXT IMPORTS
 
-// SCREENS IMPORT
 import LoginScreen from "./screens/LoginScreen";
 import HomeScreen from "./screens/HomeScreen";
 import RegistrationScreen from "./screens/RegistrationScreen";
-// SCREENS IMPORT
+
+import TestScreen from "./TestScreen";
 
 const Stack = createStackNavigator();
 
@@ -23,8 +16,9 @@ const StackScreens = () => {
   const { onAuthState, setAuthState } = useFirebaseContext();
   const [loading, setLoading] = useState(true);
   const auth = FIREBASE_AUTH;
+
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
       try {
         if (user) {
           setAuthState(true);
@@ -41,13 +35,18 @@ const StackScreens = () => {
   }, []);
 
   return (
-    <Stack.Navigator>
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
       {onAuthState ? (
-        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Group>
+          <Stack.Screen name="HomeScreen" component={HomeScreen} />
+        </Stack.Group>
       ) : (
         <>
-          <Stack.Screen name="Lo gin" component={LoginScreen} />
-          <Stack.Screen name="Create-account" component={RegistrationScreen} />
+          <Stack.Screen name="Login" component={LoginScreen} />
+          {/* <Stack.Group presentation="modal"> */}
+          <Stack.Screen name="SubLogin" component={RegistrationScreen} />
+          <Stack.Screen name="TestScreen" component={TestScreen} />
+          {/* </Stack.Group> */}
         </>
       )}
     </Stack.Navigator>

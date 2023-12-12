@@ -10,7 +10,13 @@ import { useNavigation } from "@react-navigation/native";
 
 // FIREBASE IMPORTS
 import { FIREBASE_AUTH, db } from "../../firebase";
-import { getDocs, collection } from "firebase/firestore";
+import {
+  getDocs,
+  collection,
+  addDoc,
+  deleteDoc,
+  updateDoc
+} from "firebase/firestore";
 
 // FIREBASE IMPORTS
 
@@ -19,12 +25,16 @@ import { useFirebaseContext } from "../../ContextProviders/FirebaseAuth";
 // CONTEXTS IMPORTS
 
 const HomeScreen = () => {
-  const [userInfo, setUserInfo] = [];
-  const { onAuthState, setAuthState } = useFirebaseContext();
+  const [userInformation, setUserInformation] = useState([]);
+  const { onAuthState, setAuthState, userId } = useFirebaseContext();
+
   const navigation = useNavigation();
   const auth = FIREBASE_AUTH;
   const screenWidth = Dimensions.get("window").width; // Move screenWidth here
+
   const userInfoRef = collection(db, "userInfo");
+
+  console.log(userId);
   const handleSignOut = async () => {
     auth.signOut().then(() => {
       try {
@@ -36,26 +46,25 @@ const HomeScreen = () => {
       }
     });
   };
+  const getUserInfo = async () => {
+    try {
+      const data = await getDocs(userInfoRef);
+      const filteredData = data.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id
+      }));
+      setUserInformation(filteredData);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  // useEffect(() => {
+  //   navigation.setOptions({
+  //     headerShown: false
+  //   });
 
-  useEffect(() => {
-    navigation.setOptions({
-      headerShown: false
-    });
-
-    const getUserInfo = async () => {
-      try {
-        const data = await getDocs(userInfoRef);
-        const filteredData = data.docs.map((doc) => ({
-          ...doc.data(),
-          id: doc.id
-        }));
-        console.log(filteredData);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    getUserInfo();
-  }, []);
+  //   getUserInfo();
+  // }, []);
 
   return (
     <View
@@ -68,6 +77,11 @@ const HomeScreen = () => {
         },
         { width: screenWidth }
       ]}>
+      {userInformation.map((item, index) => (
+        <View key={index}>
+          <Text>{item.job}</Text>
+        </View>
+      ))}
       <Text>Hello World {auth?.currentUser?.email}</Text>
       <TouchableOpacity style={styles.button} onPress={handleSignOut}>
         <Text>Sign Out</Text>

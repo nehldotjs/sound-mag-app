@@ -1,87 +1,51 @@
-import React, { useLayoutEffect, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigation } from "@react-navigation/native";
+import { AntDesign } from "@expo/vector-icons";
 import {
   StyleSheet,
   Text,
   View,
   TextInput,
-  TouchableOpacity
+  TouchableOpacity,
+  Image,
+  Dimensions,
+  KeyboardAvoidingView
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import { UseCard } from "../../ContextProviders/CardContext";
-import { FIREBASE_AUTH } from "../../firebase";
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  onAuthStateChanged
-} from "firebase/auth";
-
-import { useFirebaseContext } from "../../ContextProviders/FirebaseAuth";
+import bckGrndImg from "../../assets/images/pexels-tobi-loke-4334212.jpg";
 
 const LoginScreen = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const { onAuthState, setAuthState } = useFirebaseContext();
-
-  const auth = FIREBASE_AUTH;
+  const windowsWidth = Dimensions.get("window").width;
+  const windowsHeight = Dimensions.get("window").height;
   const navigation = useNavigation();
-
-  const handleSignUp = () => {
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredentials) => {
-        const user = userCredentials.user;
-        console.log(user);
-      })
-      .catch((err) => alert(err.message));
+  const getStarted = () => {
+    navigation.navigate("SubLogin");
   };
-
-  const handleLogin = () => {
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredentials) => {
-        const user = userCredentials.user;
-        setAuthState(user.uid);
-      })
-      .catch((err) => alert(err.message));
-  };
-
-  useEffect(() => {
-    const opt = navigation.setOptions({
-      headerShown: false
-    });
-    return opt;
-  }, [navigation]);
-
   return (
-    <View style={styles.container}>
-      <Text>Login Screen</Text>
-      <View style={styles.formContainer}>
-        <TextInput
-          style={styles.textInput}
-          placeholder="email"
-          value={email}
-          onChangeText={(text) => setEmail(text)}
-        />
-        <TextInput
-          style={styles.textInput}
-          placeholder="Password"
-          type="password"
-          value={password}
-          secureTextEntry
-          onChangeText={(text) => setPassword(text)}
-        />
-
-        {/* LOGIN */}
+    <>
+      <View style={{ height: windowsHeight }}>
         <TouchableOpacity
-          onPress={handleLogin}
-          style={[styles.customButton, { backgroundColor: "red" }]}>
-          <Text style={styles.buttonText}>Login</Text>
+          style={{
+            width: "50%",
+            position: "absolute",
+            zIndex: 2,
+            bottom: 40,
+            marginHorizontal: "25%",
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "white",
+            borderRadius: 5,
+            paddingVertical: 10,
+            paddingHorizontal: 30
+          }}
+          onPress={getStarted}>
+          <Text
+            style={{ color: "orangered", fontWeight: "bold", fontSize: 15 }}>
+            Get Started
+          </Text>
         </TouchableOpacity>
-
-        {/* REGISTER */}
-        <TouchableOpacity onPress={handleSignUp} style={styles.customButton}>
-          <Text style={styles.buttonText}>Register</Text>
-        </TouchableOpacity>
+        <Image source={bckGrndImg} style={styles.bckgrndImageStyle} />
       </View>
-    </View>
+    </>
   );
 };
 
@@ -89,35 +53,93 @@ export default LoginScreen;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "skyblue"
+    flex: 1
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0, 0, 0, 0.3)"
+    // Add an overlay to the background image
+  },
+  title: {
+    fontSize: 24,
+    color: "white",
+    textAlign: "center",
+    marginTop: 50
   },
   formContainer: {
-    backgroundColor: "transparent",
-    width: "100%",
-    padding: 20,
-    margin: 20,
-    justifyContent: "center",
-    alignItems: "center"
+    justifyContent: "space-evenly",
+    alignItems: "center",
+    backgroundColor: "white",
+    margin: "auto",
+    borderRadius: 20,
+    padding: 30,
+    gap: 10,
+    backgroundColor: "white"
+    // flex: 1
   },
   textInput: {
-    height: 40,
+    height: 50,
     width: "100%",
     marginBottom: 10,
     borderWidth: 1,
     borderColor: "gray",
-    paddingLeft: 10
+    paddingLeft: 10,
+    backgroundColor: "white" // Add a background color for better visibility
   },
-  customButton: {
-    backgroundColor: "green",
+  loginButton: {
+    backgroundColor: "blue",
     padding: 10,
     borderRadius: 5,
-    marginTop: 10
+    marginTop: 10,
+    width: "80%",
+    height: 50,
+    alignItems: "center",
+    justifyContent: "center"
   },
   buttonText: {
     color: "white",
+    fontWeight: "bold",
     textAlign: "center"
+  },
+  bckgrndImageStyle: {
+    flex: 1,
+    resizeMode: "cover",
+    justifyContent: "center"
+  },
+  inputContainer: {
+    width: "100%",
+    gap: "10px"
+  },
+  googleBtn: {
+    gap: 10,
+    height: 50,
+    width: "80%",
+    padding: "10px",
+    shadowColor: "black",
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "center",
+    backgroundColor: "white",
+    shadowOffset: { width: 0, height: 2 },
+    fontWeight: "bold",
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    borderRadius: 5
+  },
+  facebookBtn: {
+    gap: 10,
+    height: 50,
+    width: "80%",
+    padding: "10px",
+    shadowColor: "black",
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "center",
+    backgroundColor: "white",
+    shadowOffset: { width: 0, height: 2 },
+    fontWeight: "bold",
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    borderRadius: 5
   }
 });

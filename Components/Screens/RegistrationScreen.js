@@ -1,20 +1,9 @@
-import React, { useLayoutEffect, useEffect, useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-  TouchableOpacity,
-  Image
-} from "react-native";
-import { Input, Button } from "react-native-elements";
-import ImagePicker from "react-native-image-picker";
+import React, { useEffect, useState } from "react";
+import { TouchableOpacity, StyleSheet, View, Text } from "react-native";
+import { Input } from "react-native-elements";
 import { useNavigation } from "@react-navigation/native";
 
-import {
-  createUserWithEmailAndPassword,
-  onAuthStateChanged
-} from "firebase/auth";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { FIREBASE_AUTH } from "../../firebase";
 
 const RegistrationScreen = () => {
@@ -23,43 +12,61 @@ const RegistrationScreen = () => {
     email: "",
     password: ""
   });
+
   const navigation = useNavigation();
   const auth = FIREBASE_AUTH;
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     navigation.setOptions({
       headerShown: false
     });
   }, [navigation]);
 
-  const handleRegistration = () => {
-    const { email, password, username } = userInfo; // Destructure userInfo
-    createUserWithEmailAndPassword(auth, email, password, username)
-      .then((userCredentials) => {
-        const user = userCredentials.user;
-        console.log(user);
-      })
-      .catch((err) => alert(err.message));
-    console.log("User Info:", userInfo);
+  const handleInputChange = (field, value) => {
+    setUserInfo((prevUserInfo) => ({ ...prevUserInfo, [field]: value }));
+  };
+
+  const handleRegistration = async () => {
+    try {
+      const { email, password, username } = userInfo;
+      const userCredentials = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password,
+        username
+      );
+      const user = userCredentials.user;
+      console.log("User Info:", user);
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
+  const redirectToHome = () => {
+    navigation.navigate("TestScreen");
   };
 
   return (
     <View style={styles.container}>
       <Input
         placeholder="Username"
-        onChangeText={(text) => setUserInfo({ ...userInfo, username: text })}
+        onChangeText={(text) => handleInputChange("username", text)}
       />
       <Input
         placeholder="Email"
-        onChangeText={(text) => setUserInfo({ ...userInfo, email: text })}
+        onChangeText={(text) => handleInputChange("email", text)}
       />
       <Input
         placeholder="Password"
         secureTextEntry
-        onChangeText={(text) => setUserInfo({ ...userInfo, password: text })}
+        onChangeText={(text) => handleInputChange("password", text)}
       />
-
-      <Button title="Register" onPress={handleRegistration} />
+      <TouchableOpacity onPress={handleRegistration}>
+        <Text>Create</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={redirectToHome}>
+        <Text>Cancel</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -70,17 +77,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 20
-  },
-  profileImage: {
-    width: 150,
-    height: 150,
-    borderRadius: 75,
-    marginBottom: 20
-  },
-  uploadText: {
-    color: "blue",
-    textDecorationLine: "underline",
-    marginBottom: 20
   }
 });
 
