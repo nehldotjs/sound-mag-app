@@ -1,16 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { TouchableOpacity, StyleSheet, View, Text } from "react-native";
-import { Input } from "react-native-elements";
+import {
+  TouchableOpacity,
+  StyleSheet,
+  View,
+  Text,
+  TextInput
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { FIREBASE_AUTH } from "../../firebase";
+import { FIREBASE_AUTH } from "../../firebase"
 
 const RegistrationScreen = () => {
   const [userInfo, setUserInfo] = useState({
     username: "",
     email: "",
-    password: ""
+    password: "" 
   });
 
   const navigation = useNavigation();
@@ -27,6 +32,7 @@ const RegistrationScreen = () => {
   };
 
   const handleRegistration = async () => {
+  
     try {
       const { email, password, username } = userInfo;
       const userCredentials = await createUserWithEmailAndPassword(
@@ -37,30 +43,35 @@ const RegistrationScreen = () => {
       );
       const user = userCredentials.user;
       console.log("User Info:", user);
+      redirectToHome();
     } catch (error) {
       alert(error.message);
     }
+    
   };
 
   const redirectToHome = () => {
-    navigation.navigate("TestScreen");
+    navigation.navigate("HomeScreen"); // Assuming you want to navigate to "HomeScreen" after registration
   };
 
   return (
     <View style={styles.container}>
-      <Input
+      <TextInput
         placeholder="Username"
         onChangeText={(text) => handleInputChange("username", text)}
       />
-      <Input
+
+      <TextInput
         placeholder="Email"
         onChangeText={(text) => handleInputChange("email", text)}
       />
-      <Input
+
+      <TextInput
         placeholder="Password"
         secureTextEntry
         onChangeText={(text) => handleInputChange("password", text)}
       />
+
       <TouchableOpacity onPress={handleRegistration}>
         <Text>Create</Text>
       </TouchableOpacity>
@@ -71,6 +82,7 @@ const RegistrationScreen = () => {
   );
 };
 
+export default RegistrationScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -79,5 +91,3 @@ const styles = StyleSheet.create({
     padding: 20
   }
 });
-
-export default RegistrationScreen;

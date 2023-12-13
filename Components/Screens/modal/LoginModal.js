@@ -12,8 +12,8 @@ import {
 import { useNavigation } from "@react-navigation/native";
 
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { useFirebaseContext } from "../../ContextProviders/FirebaseAuth";
-import { FIREBASE_AUTH } from "../../firebase";
+import { useFirebaseContext } from "../../../ContextProviders/FirebaseAuth";
+import { FIREBASE_AUTH } from "../../../firebase";
 
 const LoginModal = () => {
   const [email, setEmail] = useState("");
@@ -32,6 +32,13 @@ const LoginModal = () => {
         setAuthState(user.uid);
       })
       .catch((err) => alert(err.message));
+  };
+
+  const googleSignin = () => {
+    console.log("HELLO WORLD");
+  };
+  const signUpBtn = () => {
+    console.loog("Signup");
   };
 
   return (
