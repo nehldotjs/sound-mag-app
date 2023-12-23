@@ -4,18 +4,20 @@ import {
   StyleSheet,
   View,
   Text,
-  TextInput
+  TextInput,
+  SafeAreaView,
+  KeyboardAvoidingView
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { FIREBASE_AUTH } from "../../firebase"
+import { FIREBASE_AUTH } from "../../firebase";
 
 const RegistrationScreen = () => {
   const [userInfo, setUserInfo] = useState({
     username: "",
     email: "",
-    password: "" 
+    password: ""
   });
 
   const navigation = useNavigation();
@@ -32,7 +34,6 @@ const RegistrationScreen = () => {
   };
 
   const handleRegistration = async () => {
-  
     try {
       const { email, password, username } = userInfo;
       const userCredentials = await createUserWithEmailAndPassword(
@@ -47,7 +48,6 @@ const RegistrationScreen = () => {
     } catch (error) {
       alert(error.message);
     }
-    
   };
 
   const redirectToHome = () => {
@@ -55,39 +55,71 @@ const RegistrationScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <TextInput
-        placeholder="Username"
-        onChangeText={(text) => handleInputChange("username", text)}
-      />
+    <SafeAreaView>
+      <KeyboardAvoidingView>
+        <View style={styles.container}>
+          <View style={styles.legalNameContainer}>
+            <View style={styles.legalnameWrapper}>
+              <Text style={styles.label}>Firstname</Text>
+              <TextInput placeholder="firstname"></TextInput>
+            </View>
 
-      <TextInput
-        placeholder="Email"
-        onChangeText={(text) => handleInputChange("email", text)}
-      />
+            <View style={styles.legalnameWrapper}>
+              <Text style={styles.label}>Lastname</Text>
+              <TextInput placeholder="lastname"></TextInput>
+            </View>
+          </View>
+          <View style={styles.wrapper}>
+            <Text style={styles.label}>Username</Text>
+            <TextInput
+              placeholder="Suggest a username"
+              onChangeText={(text) => handleInputChange("username", text)}
+            />
+          </View>
+          <View style={styles.wrapper}>
+            <Text style={styles.label}>Email</Text>
+            <TextInput
+              placeholder="Enter email address"
+              onChangeText={(text) => handleInputChange("email", text)}
+            />
+          </View>
 
-      <TextInput
-        placeholder="Password"
-        secureTextEntry
-        onChangeText={(text) => handleInputChange("password", text)}
-      />
-
-      <TouchableOpacity onPress={handleRegistration}>
-        <Text>Create</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={redirectToHome}>
-        <Text>Cancel</Text>
-      </TouchableOpacity>
-    </View>
+          <View style={styles.wrapper}>
+            <Text style={styles.label}>Password</Text>
+            <TextInput placeholder="Password" secureTextEntry />
+          </View>
+          <View style={styles.wrapper}>
+            <Text style={styles.label}>Confirm password</Text>
+            <TextInput
+              placeholder="Password"
+              secureTextEntry
+              onChangeText={(text) => handleInputChange("password", text)}
+            />
+          </View>
+        </View>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 
 export default RegistrationScreen;
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    backgroundColor: "green",
+    gap: 10,
     justifyContent: "center",
     alignItems: "center",
-    padding: 20
-  }
+    paddingVertical: 20,
+    paddingHorizontal: 10
+  },
+  legalNameContainer: {
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    gap: 5,
+    width: "100%"
+  },
+  label: { fontSize: 20, fontWeight: "bold" },
+  wrapper: { backgroundColor: "orange", width: "100%", gap: 5 },
+  legalnameWrapper: { gap: 10, flex: 1, backgroundColor: "pink" }
 });

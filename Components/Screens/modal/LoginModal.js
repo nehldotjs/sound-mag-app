@@ -27,19 +27,21 @@ const LoginModal = () => {
 
   const navigation = useNavigation();
   const handleLogin = () => {
+    const Message = "Please check your network connection";
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredentials) => {
         const user = userCredentials.user;
         setAuthState(user.uid);
       })
-      .catch((err) => alert(err.message));
+      .catch(() => alert(Message));
   };
 
   const googleSignin = () => {
     console.log("HELLO WORLD");
   };
-  const signUpBtn = () => {
-    console.log("Signup");
+
+  const handleSignUp = () => {
+    navigation.navigate("SignUpScreen");
   };
 
   return (
@@ -48,8 +50,8 @@ const LoginModal = () => {
         <View style={[styles.maincontainer, { height: windowsHeight }]}>
           <KeyboardAvoidingView
             style={{
-              // backgroundColor: "white",
               borderRadius: 5,
+              // backgroundColor: "white",
               // paddingHorizontal: 10,
               width: windowsWidth * 0.9
             }}>
@@ -89,40 +91,54 @@ const LoginModal = () => {
                 Or
               </Text>
               <TouchableOpacity onPress={googleSignin} style={styles.googleBtn}>
-                <AntDesign name="google" size={24} color="orangered" />
-                <Text style={{ fontWeight: "bold", color: "gray" }}>
+                <AntDesign
+                  name="google"
+                  size={24}
+                  color="orangered"
+                  style={{
+                    backgroundColor: "white",
+                    height: "100%",
+                    width: "auto",
+                    paddingHorizontal: 10,
+                    paddingVertical: 10
+                  }}
+                />
+                <Text style={{ fontWeight: "bold", color: "white", flex: 1 }}>
                   Continue with Google
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.facebookBtn}>
-                <AntDesign name="facebook-square" size={24} color="blue" />
-                <Text style={{ fontWeight: "bold", color: "gray" }}>
+                <AntDesign
+                  name="facebook-square"
+                  size={24}
+                  color="blue"
+                  style={{
+                    backgroundColor: "white",
+                    height: "100%",
+                    width: "auto",
+                    paddingHorizontal: 10,
+                    paddingVertical: 10
+                  }}
+                />
+                <Text style={{ fontWeight: "bold", color: "white", flex: 1 }}>
                   Continue with Facebook
                 </Text>
               </TouchableOpacity>
-              <TouchableOpacity>
+              <TouchableOpacity style={styles.recoveryBtn}>
                 <Text style={{ fontWeight: "bold", color: "blue" }}>
                   Forgot password?
                 </Text>
               </TouchableOpacity>
-              <Text style={{ color: "gray", fontWeight: "bold", fontSize: 14 }}>
-                Don't have an account yet?
-                <TouchableOpacity onPress={signUpBtn}>
-                  <Text style={{ color: "blue" }}> Sign up here</Text>
-                </TouchableOpacity>
-              </Text>
+              <TouchableOpacity onPress={handleSignUp} style={styles.signUpBtn}>
+                <Text
+                  style={{ color: "gray", fontWeight: "normal", fontSize: 12 }}>
+                  Don't have an account yet?{" "}
+                  <Text style={{ color: "#4285F4" }}>Sign up here</Text>
+                </Text>
+              </TouchableOpacity>
             </View>
           </KeyboardAvoidingView>
-          <View
-            style={{
-              backgroundColor: "black",
-              height: "100%",
-              width: "100%",
-              position: "absolute",
-              opacity: 0.4,
-              margin: "auto",
-              zIndex: -1
-            }}></View>
+          <View style={styles.ovalay}></View>
         </View>
       </SafeAreaView>
     </>
@@ -140,22 +156,22 @@ const styles = StyleSheet.create({
   },
   formContainer: {
     gap: 15,
-    borderRadius: 5,
-    paddingVertical: 10,
+    borderRadius: 20,
+    paddingVertical: 30,
+    paddingHorizontal: 10,
     justifyContent: "space-evenly",
     backgroundColor: "white"
   },
   titleStyle: {
-    paddingVertical: 20,
-    paddingHorizontal: 30,
-    textAlign: "center",
+    flex: 1,
+    textAlign: "left",
     fontWeight: "bold",
     fontSize: 20,
     color: "#000",
     width: "70%",
-    margin: "auto",
     borderBottom: 1,
-    borderColor: "black"
+    borderColor: "black",
+    paddingHorizontal: 10
   },
   inputContainer: {
     paddingHorizontal: 10,
@@ -172,7 +188,11 @@ const styles = StyleSheet.create({
   textInput: {
     fontSize: 20,
     paddingVertical: 10,
-    paddingHorizontal: 10
+    paddingHorizontal: 10,
+    borderRadius: 5,
+    backgroundColor: "#fff",
+    borderWidth: 2, // Add this line
+    borderColor: "lightgray" // Add this line
   },
   loginButton: {
     backgroundColor: "black",
@@ -191,31 +211,58 @@ const styles = StyleSheet.create({
     fontSize: 15
   },
   googleBtn: {
-    backgroundColor: "white",
+    backgroundColor: "#4285F4",
     textAlign: "center",
     width: "80%",
     justifyContent: "center",
     alignItems: "center",
     margin: "auto",
-    paddingVertical: 10,
-    paddingHorizontal: 20,
     borderRadius: 5,
     flexDirection: "row",
     gap: 10,
-    border: 2,
-    borderColor: "black"
+    overflow: "hidden",
+    borderWidth: 2, // Add this line
+    borderColor: "gray" // Add this line
   },
   facebookBtn: {
-    backgroundColor: "white",
+    backgroundColor: "#3B5998",
     textAlign: "center",
     width: "80%",
     justifyContent: "center",
     alignItems: "center",
     margin: "auto",
-    paddingVertical: 10,
-    paddingHorizontal: 20,
     borderRadius: 5,
     flexDirection: "row",
-    gap: 10
+    gap: 10,
+    overflow: "hidden",
+    borderWidth: 2, // Add this line
+    borderColor: "gray" // Add this line
+  },
+  recoveryBtn: {
+    backgroundColor: "red ",
+    textAlign: "center",
+    width: "80%",
+    justifyContent: "center",
+    alignItems: "center",
+    margin: "auto",
+    // paddingVertical: 10,
+    // paddingHorizontal: 20,
+    borderRadius: 5
+  },
+  signUpBtn: {
+    margin: "auto",
+    justifyContent: "center",
+    alignItems: "center"
+    // paddingHorizontal: 10,
+    // paddingVertical: 10
+  },
+  ovalay: {
+    backgroundColor: "black",
+    height: "100%",
+    width: "100%",
+    position: "absolute",
+    opacity: 0.4,
+    margin: "auto",
+    zIndex: -1
   }
 });
