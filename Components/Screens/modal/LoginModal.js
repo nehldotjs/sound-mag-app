@@ -51,8 +51,6 @@ const LoginModal = () => {
           <KeyboardAvoidingView
             style={{
               borderRadius: 5,
-              // backgroundColor: "white",
-              // paddingHorizontal: 10,
               width: windowsWidth * 0.9
             }}>
             <View style={[styles.formContainer, { width: windowsWidth * 0.9 }]}>
@@ -131,7 +129,7 @@ const LoginModal = () => {
               </TouchableOpacity>
               <TouchableOpacity onPress={handleSignUp} style={styles.signUpBtn}>
                 <Text
-                  style={{ color: "gray", fontWeight: "normal", fontSize: 12 }}>
+                  style={{ color: "gray", fontWeight: "normal", fontSize: 15 }}>
                   Don't have an account yet?{" "}
                   <Text style={{ color: "#4285F4" }}>Sign up here</Text>
                 </Text>
@@ -152,7 +150,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 40,
     paddingVertical: 40,
-    paddingHorizontal: 40
+    paddingHorizontal: 40,
+    backgroundColor: "transparent",
+    position: "relative"
   },
   formContainer: {
     gap: 15,
@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
     paddingVertical: 30,
     paddingHorizontal: 10,
     justifyContent: "space-evenly",
-    backgroundColor: "white"
+    backgroundColor: "#fff"
   },
   titleStyle: {
     flex: 1,

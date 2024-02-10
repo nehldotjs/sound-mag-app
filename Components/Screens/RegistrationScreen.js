@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   TouchableOpacity,
   StyleSheet,
@@ -6,36 +6,51 @@ import {
   Text,
   TextInput,
   SafeAreaView,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  Dimensions
 } from "react-native";
+import { CheckBox } from "react-native-elements";
 import { useNavigation } from "@react-navigation/native";
-
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { FIREBASE_AUTH } from "../../firebase";
 
 const RegistrationScreen = () => {
   const [userInfo, setUserInfo] = useState({
+    firstname: "",
+    lastname: "",
     username: "",
-    email: "",
-    password: ""
+    email: "" 
   });
 
+  const [password, setPassword] = useState("");
+  const [passwordMatch, setPasswordMatch] = useState("");
+
+  const [isMatch, setIsMatch] = useState(false);
+
+  const windowsWidth = Dimensions.get("window").width;
+  const windowsHeight = Dimensions.get("window").height;
   const navigation = useNavigation();
   const auth = FIREBASE_AUTH;
 
   useEffect(() => {
-    navigation.setOptions({
-      headerShown: false
-    });
-  }, [navigation]);
+    navigation.setOptions({ headerShown: false });
+  }, [navigation, isMatch]);
 
   const handleInputChange = (field, value) => {
-    setUserInfo((prevUserInfo) => ({ ...prevUserInfo, [field]: value }));
+    setUserInfo((prevUserInfo) => ({
+      ...prevUserInfo,
+      [field]: value
+    }));
   };
 
+  const handleMatch = () => {
+    password === passwordMatch ? true : false;
+  };
+
+  console.log("password:", password, "confirm:", passwordMatch, isMatch);
+  
   const handleRegistration = async () => {
     try {
-      const { email, password, username } = userInfo;
       const userCredentials = await createUserWithEmailAndPassword(
         auth,
         email,
@@ -43,58 +58,109 @@ const RegistrationScreen = () => {
         username
       );
       const user = userCredentials.user;
-      console.log("User Info:", user);
-      redirectToHome();
+      navigation.navigate("HomeScreen");
     } catch (error) {
       alert(error.message);
     }
   };
 
-  const redirectToHome = () => {
-    navigation.navigate("HomeScreen"); // Assuming you want to navigate to "HomeScreen" after registration
+  const handlePage = () => {
+    navigation.navigate("LoginModal");
   };
 
   return (
-    <SafeAreaView>
+    <SafeAreaView
+      style={{
+        height: windowsHeight,
+        width: windowsWidth,
+        justifyContent: "center"
+      }}>
       <KeyboardAvoidingView>
         <View style={styles.container}>
-          <View style={styles.legalNameContainer}>
-            <View style={styles.legalnameWrapper}>
-              <Text style={styles.label}>Firstname</Text>
-              <TextInput placeholder="firstname"></TextInput>
-            </View>
+          <Text style={styles.heading}>Create your account.</Text>
 
-            <View style={styles.legalnameWrapper}>
+          <View style={styles.nameContainer}>
+            <View style={styles.nameWrapper}>
+              <Text style={styles.label}>Firstname</Text>
+              <TextInput
+                placeholder="Firstname"
+                style={styles.inputStyle}
+                onChangeText={(text) => handleInputChange("firstname", text)}
+              />
+            </View>
+            <View style={styles.nameWrapper}>
               <Text style={styles.label}>Lastname</Text>
-              <TextInput placeholder="lastname"></TextInput>
+              <TextInput
+                placeholder="Lastname"
+                style={styles.inputStyle}
+                onChangeText={(text) => handleInputChange("lastname", text)}
+              />
             </View>
           </View>
+
           <View style={styles.wrapper}>
             <Text style={styles.label}>Username</Text>
             <TextInput
-              placeholder="Suggest a username"
+              style={styles.inputStyle}
+              placeholder="Username"
               onChangeText={(text) => handleInputChange("username", text)}
             />
           </View>
           <View style={styles.wrapper}>
             <Text style={styles.label}>Email</Text>
             <TextInput
-              placeholder="Enter email address"
+              style={styles.inputStyle}
+              placeholder="Email"
               onChangeText={(text) => handleInputChange("email", text)}
             />
           </View>
-
           <View style={styles.wrapper}>
             <Text style={styles.label}>Password</Text>
-            <TextInput placeholder="Password" secureTextEntry />
+            <TextInput
+              style={styles.inputStyle}
+              placeholder="Password"
+              value={password}
+              onChangeText={(text) => setPassword(text)}
+            />
           </View>
           <View style={styles.wrapper}>
             <Text style={styles.label}>Confirm password</Text>
             <TextInput
-              placeholder="Password"
-              secureTextEntry
-              onChangeText={(text) => handleInputChange("password", text)}
+              style={styles.inputStyle}
+              placeholder="Confirm password"
+              value={passwordMatch}
+              onChangeText={(text) => {
+                setPasswordMatch(text);
+                handleMatch;
+              }}
             />
+          </View>
+
+          <View style={styles.wrapper}>
+            {isMatch ? <Text>Hello</Text> : <Text>World</Text>}
+
+            {/* <CheckBox
+              title={isMatch ? "Password match" : "At least 6 characters"}
+              checked={isMatch}
+              containerStyle={styles.checkboxContainer}
+            /> */}
+          </View>
+
+          <TouchableOpacity
+            style={styles.submitBtn}
+            onPress={handleRegistration}>
+            <Text style={styles.submitBtnText}>Submit</Text>
+          </TouchableOpacity>
+          <View style={styles.hrContainer}>
+            <View style={styles.hrLine} />
+            <Text style={styles.hrText}>Or</Text>
+            <View style={styles.hrLine} />
+          </View>
+          <View style={styles.loginContainer}>
+            <Text style={styles.loginText}>Already have an account? </Text>
+            <TouchableOpacity onPress={handlePage}>
+              <Text style={styles.loginLink}>Login</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </KeyboardAvoidingView>
@@ -103,23 +169,99 @@ const RegistrationScreen = () => {
 };
 
 export default RegistrationScreen;
+
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "green",
-    gap: 10,
     justifyContent: "center",
     alignItems: "center",
     paddingVertical: 20,
+    paddingHorizontal: 15,
+    gap: 10
+  },
+  heading: {
+    fontSize: 20,
+    fontWeight: "bold",
     paddingHorizontal: 10
   },
-  legalNameContainer: {
+  nameContainer: {
     flexDirection: "row",
     justifyContent: "flex-start",
     alignItems: "center",
-    gap: 5,
+    gap: 10,
     width: "100%"
   },
-  label: { fontSize: 20, fontWeight: "bold" },
-  wrapper: { backgroundColor: "orange", width: "100%", gap: 5 },
-  legalnameWrapper: { gap: 10, flex: 1, backgroundColor: "pink" }
+  label: {
+    fontSize: 20,
+    fontWeight: "bold"
+  },
+  nameWrapper: {
+    gap: 10,
+    flex: 1
+  },
+  wrapper: {
+    width: "100%",
+    gap: 5,
+    paddingHorizontal: 10
+  },
+  inputStyle: {
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+    fontSize: 20,
+    overflow: "hidden",
+    backgroundColor: "#fff",
+    borderColor: "darkgray",
+    borderRadius: 10,
+    borderWidth: 2
+  },
+  checkboxContainer: {
+    backgroundColor: "transparent",
+    borderWidth: 0
+  },
+  submitBtn: {
+    justifyContent: "center",
+    backgroundColor: "black",
+    alignItems: "center",
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    width: "80%",
+    borderRadius: 10
+  },
+  submitBtnText: {
+    fontWeight: "bold",
+    fontSize: 15,
+    color: "#fff"
+  },
+  hrContainer: {
+    flexDirection: "row",
+    gap: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 20
+  },
+  hrLine: {
+    height: 2,
+    width: "100%",
+    flex: 1,
+    backgroundColor: "gray"
+  },
+  hrText: {
+    fontWeight: "bold",
+    fontSize: 15,
+    textAlign: "center"
+  },
+  loginContainer: {
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
+    marginTop: 20
+  },
+  loginText: {
+    fontSize: 15,
+    color: "gray"
+  },
+  loginLink: {
+    color: "black",
+    fontWeight: "bold"
+  }
 });

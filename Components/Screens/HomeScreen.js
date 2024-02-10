@@ -82,7 +82,7 @@ const HomeScreen = () => {
           <Text>{item.job}</Text>
         </View>
       ))}
-      <Text>Hello World {auth?.currentUser?.email}</Text>
+      <Text>WORK IN PROGRESS {auth?.currentUser?.email}</Text>
       <TouchableOpacity style={styles.button} onPress={handleSignOut}>
         <Text>Sign Out</Text>
       </TouchableOpacity>

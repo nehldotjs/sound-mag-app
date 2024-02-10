@@ -39,7 +39,7 @@ const StackScreens = () => {
   const renderUnauthenticatedScreens = () => (
     <>
       <Stack.Group>
-        <Stack.Screen name="SplashScreen" component={SplashScreen} />
+        {/* <Stack.Screen name="SplashScreen" component={SplashScreen} /> */}
         <Stack.Screen name="SignUpScreen" component={RegistrationScreen} />
       </Stack.Group>
       <Stack.Group screenOptions={{ presentation: "modal" }}>
